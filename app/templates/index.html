@@ -1,0 +1,14 @@
+<!-- app/templates/index.html -->
+
+{% extends "base.html" %}
+
+{% block content %}
+<div id="query-container">
+    <textarea id="query-input" placeholder="Enter your legal query here..."></textarea>
+    <button id="submit-query">Submit Query</button>
+</div>
+<div id="response-container">
+    <h2>Response:</h2>
+    <div id="response-content"></div>
+</div>
+{% endblock %}
