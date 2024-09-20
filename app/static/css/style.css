@@ -12,24 +12,53 @@ header {
     background-color: #333;
     color: #fff;
     text-align: center;
-    padding: 1rem;
+    padding: 0.5rem; /* Reduced padding */
 }
 
-main {
+.container {
+    display: flex;
     padding: 2rem;
-    max-width: 800px;
-    margin: 0 auto;
 }
 
-#query-container {
-    margin-bottom: 2rem;
+.chat-container {
+    flex-grow: 1; /* Use full width */
+    display: flex;
+    flex-direction: column;
+    height: 80vh;
+}
+
+.messages {
+    flex-grow: 1;
+    overflow-y: auto;
+    background-color: #fff;
+    padding: 1rem;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.message {
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    border-radius: 10px; /* Curved edges */
+}
+
+.message.user {
+    text-align: right;
+    background-color: #eaeff0; /* Subtle color for user */
+}
+
+.message.ai {
+    text-align: left;
+    background-color: #f0f3ec; /* Subtle color for AI */
+}
+
+.chat-input {
+    display: flex;
 }
 
 #query-input {
     width: 100%;
-    height: 100px;
-    padding: 0.5rem;
-    margin-bottom: 1rem;
+    height: 50px;
 }
 
 #submit-query {
@@ -37,19 +66,4 @@ main {
     color: #fff;
     border: none;
     padding: 0.5rem 1rem;
-    cursor: pointer;
-}
-
-#response-container {
-    background-color: #fff;
-    padding: 1rem;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-footer {
-    text-align: center;
-    padding: 1rem;
-    background-color: #333;
-    color: #fff;
 }

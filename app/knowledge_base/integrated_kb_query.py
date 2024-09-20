@@ -10,8 +10,7 @@ from llama_index.core.retrievers import VectorIndexRetriever
 from llama_index.core.indices.keyword_table import KeywordTableIndex
 from llama_index.embeddings.fastembed import FastEmbedEmbedding
 from llama_index.llms.groq import Groq
-from llama_index.core import Settings, PropertyGraphIndex
-from llama_index.core import PromptTemplate
+from llama_index.core import Settings, PropertyGraphIndex, PromptTemplate
 from llama_index.core.tools import QueryEngineTool
 from llama_index.core.query_engine import RouterQueryEngine
 from llama_index.core.selectors import LLMSingleSelector, LLMMultiSelector
@@ -24,6 +23,7 @@ from dotenv import load_dotenv
 import numpy as np
 import nest_asyncio
 import os
+from flask import session
 
 load_dotenv()
 nest_asyncio.apply()
@@ -249,7 +249,42 @@ class IntegratedKnowledgeBaseQuery:
 
     def query_knowledge_base(self, query: str) -> str:
         logging.info(f"Querying knowledge base: {query}")
-        # try:
+        
+        # Access previous context from the session
+        previous_context = session.get('history', [])
+
+        # Determine strategy based on query and context
+        if self.is_new_query(query, previous_context):
+            response = self.query_datastores(query)
+        elif self.can_use_previous_context(query, previous_context):
+            response = self.use_previous_context(query, previous_context)
+        else:
+            response = self.combine_context_and_query(query, previous_context)
+        
+        # Store response in session for future context
+        if 'history' not in session:
+            session['history'] = []
+        session['history'].append(response)
+
+        return response
+
+    def is_new_query(self, query: str, context: list) -> bool:
+        return not any(entity in query for entity in context)
+
+    def can_use_previous_context(self, query: str, context: list) -> bool:
+        return any(entity in query for entity in context)
+
+    def combine_context_and_query(self, query: str, context: list) -> str:
+        datastore_response = self.query_datastores(query)
+        combined_response = self.llm.complete(f"{datastore_response} with additional insights from previous interactions.").text
+        return combined_response
+
+    def use_previous_context(self, query: str, context: list) -> str:
+        relevant_context = [c for c in context if c in query]
+        llm_output = self.llm.complete(relevant_context).text
+        return llm_output
+
+    def query_datastores(self, query: str) -> str:
         # Create query engines
         graph_query_engine = self.graph_index.as_query_engine()
         vector_query_engine = self.vector_index.as_query_engine()
@@ -268,6 +303,7 @@ class IntegratedKnowledgeBaseQuery:
         TREE_SUMMARIZE_PROMPT_TMPL = (
             """You are a helpful legal AI assistant specialized in understanding the legal enquiries"""
         )
+        
         tree_summarize = TreeSummarize(
             summary_template=PromptTemplate(TREE_SUMMARIZE_PROMPT_TMPL)
         )
@@ -283,12 +319,13 @@ class IntegratedKnowledgeBaseQuery:
         response = router_query_engine.query(query)
 
         graph_results, case_details = self.format_graph_results(query)
-        logging.info (f"Formatted graph results: {graph_results}")
+        logging.info(f"Formatted graph results: {graph_results}")
 
         vector_results = self.format_vector_results(query)
-        logging.info (f"Formatted vector results: {vector_results}")
+        logging.info(f"Formatted vector results: {vector_results}")
 
         llm_response = self.generate_llm_response(query, str(response), graph_results, vector_results, case_details)
+        
         logging.info(f"LLM response: {llm_response}")
 
         return str(llm_response)

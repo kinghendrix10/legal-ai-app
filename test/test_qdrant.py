@@ -15,7 +15,7 @@ Settings.embed_model = embed_model
 llm = Groq(model="llama3-70b-8192", api_key=os.getenv('GROQ_API_KEY'))
 Settings.llm = llm
 
-query = 'Marvin Gerber v. Henry Herskovitz'
+query = 'Cases involving Judge Molley'
 
 qdrant_client = QdrantClient(
     url=os.getenv("QDRANT_URL"),

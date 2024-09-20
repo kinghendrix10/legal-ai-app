@@ -14,3 +14,4 @@ llama-parse
 llama-index-vector-stores-qdrant
 llama-index-embeddings-fastembed
 llama-index-llms-groq
+matplotlib

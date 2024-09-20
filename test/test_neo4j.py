@@ -5,7 +5,7 @@ import re
 
 load_dotenv()
 
-query = 'Marvin Gerber v. Henry Herskovitz'
+query = 'Cases involving Judge Molley'
 
 cypher_query = """
         MATCH (e)
