@@ -292,3 +292,19 @@ class IntegratedKnowledgeBaseQuery:
         logging.info(f"LLM response: {llm_response}")
 
         return str(llm_response)
+    
+def main():
+    kb_query = IntegratedKnowledgeBaseQuery()
+    kb_query.diagnose_stores()
+
+    while True:
+        print("\n--- Legal AI Knowledge Base ---")
+        query = input("\nEnter your query (or 'quit' to exit): ")
+        if query.lower() == 'quit':
+            break
+        response = kb_query.query_knowledge_base(query)
+        print(response)
+        print("\n" + "=" * 10 + "\n")
+
+if __name__ == "__main__":
+    main()
