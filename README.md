@@ -38,10 +38,11 @@ To set up the environment and install dependencies, follow these steps:
    cd app/
    ```
    
-3. Install the dependencies:
+4. Install the dependencies:
    ```bash
    pip install -r requirements.txt
    ```
+   
 ## Usage
 
 To run the application and interact with it, follow these steps:
