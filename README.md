@@ -33,12 +33,7 @@ To set up the environment and install dependencies, follow these steps:
    source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
    ```
 
-3. Change to the app directory:
-   ```bash
-   cd app/
-   ```
-   
-4. Install the dependencies:
+3. Install the dependencies:
    ```bash
    pip install -r requirements.txt
    ```
