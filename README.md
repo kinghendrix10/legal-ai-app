@@ -22,6 +22,7 @@ To set up the environment and install dependencies, follow these steps:
 
 3. Install the dependencies:
    ```bash
+   cd app/
    pip install -r requirements.txt
    ```
 
